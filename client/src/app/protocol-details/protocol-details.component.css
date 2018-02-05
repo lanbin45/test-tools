@@ -1,0 +1,29 @@
+.form-title-cls {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+:host ::ng-deep .vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .vertical-center-modal .ant-modal {
+  top: 0;
+}
+
+.form-item-class {
+  padding-top: 15px;
+}
+
+.success-cls {
+  color: green;
+  font-size: 18px;
+}
+
+.failed-cls {
+  color: red;
+  font-size: 18px;
+}

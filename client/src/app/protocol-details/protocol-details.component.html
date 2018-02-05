@@ -1,0 +1,458 @@
+<div nz-row [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'left'">
+  <div nz-col [nzSpan]="20">
+    <nz-card>
+      <ng-template #title>
+        Server Setting
+      </ng-template>
+      <ng-template #extra>
+          <i *ngIf="!connectState" class="anticon anticon-check-circle success-cls">已连接</i>
+          <i *ngIf="connectState" class="anticon anticon-close-square failed-cls">未连接</i>
+      </ng-template>
+      <ng-template #body>
+        <form nz-form [nzType]="'horizontal'" [formGroup]="validateForm1" (ngSubmit)="submitForm1($event,validateForm1.value)">
+          <!-- <div nz-row>
+            <div nz-col [nzSpan]="10" style="padding:0.3em">
+              <span class="form-title-cls">Server Setting</span>
+            </div>
+          </div> -->
+          <div nz-form-item nz-row class="form-item-class">
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label nz-form-item-required>Host</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5">
+              <nz-input formControlName="host" [nzSize]="'large'" nzPlaceHolder="请输入host name!"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl1('host').dirty&&getFormControl1('host').hasError('required')">不能为空</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label nz-form-item-required>Port</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5">
+              <nz-input formControlName="port" [nzSize]="'large'" nzPlaceHolder="请输入port number!"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl1('port').dirty&&getFormControl1('port').hasError('required')">不能为空！</div>
+            </div>
+            <div nz-col [nzSpan]="4" [nzPush]="4" nz-form-control>
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'">连接</button>
+            </div>
+          </div>
+          <!-- <div nz-form-item nz-row> -->
+            
+          <!-- </div> -->
+        </form>
+      </ng-template>
+    </nz-card>
+  </div>
+</div>
+
+<div nz-row [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'left'">
+  <div nz-col [nzSpan]="20">
+    <nz-card>
+      <ng-template #title>
+        ScannerSetting
+      </ng-template>
+      <ng-template #body>
+        <form nz-form [nzType]="'horizontal'">
+          <div nz-form-item nz-row class="form-item-class">
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label>Model</label>
+            </div>
+            <div nz-col [nzSpan]="5">
+              <nz-select [(ngModel)]="modelName" [nzSize]="'large'" (nzOpenChange)="modelChange()" name="model">
+                <nz-option *ngFor="let option of modelOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label>Scanner Name</label>
+            </div>
+            <div nz-col [nzSpan]="5">
+              <nz-select [(ngModel)]="scannerName" [nzSize]="'large'" name="scanner">
+                <nz-option *ngFor="let option of scannerOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            
+          </div>
+        </form>
+      </ng-template>
+    </nz-card>
+  </div>
+</div>
+
+
+<div nz-row [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'left'">
+  <div nz-col [nzSpan]="20">
+    <nz-card>
+      <ng-template #title>
+        Protocol Details
+      </ng-template>
+      <ng-template #body>
+        <form nz-form [nzType]="'horizontal'" [formGroup]="validateForm">
+          <!-- *********************************************
+                         PROTOCOL 
+          **************************************************-->
+          <div nz-row>
+            <div nz-col [nzSpan]="10" style="padding:0.3em">
+              <span class="form-title-cls">Protocol</span>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>EP Name</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5" nzHasFeedback>
+              <nz-input formControlName="epName" [nzSize]="'large'" nzPlaceHolder="请输入EP Name" [nzDisabled]="epState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('epName').dirty&&getFormControl('epName').hasError('required')">不能为空！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>EP Type</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5">
+              <nz-select formControlName="epType" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of epTypeOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>EP No.</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5" nzHasFeedback>
+              <nz-input formControlName="epNo" [nzSize]="'large'" nzPlaceHolder="请输入三位数EP No!(eg. 001) " [nzDisabled]="epState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('epNo').dirty&&getFormControl('epNo').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('epNo').dirty&&getFormControl('epNo').hasError('minlength')">少于3位</div>
+              <div nz-form-explain *ngIf="getFormControl('epNo').dirty&&getFormControl('epNo').hasError('maxlength')">多于3位</div>
+              <div nz-form-explain *ngIf="getFormControl('epNo').dirty&&getFormControl('epNo').hasError('pattern')">只能输入数字</div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Patient Type</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5">
+              <nz-select formControlName="patientType" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of patientTypeOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Organ</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5">
+              <nz-select formControlName="organ" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of organOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Patient Position</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="5">
+              <nz-select formControlName="patientPosition" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of patientPositionOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <!-- *********************************************
+                         Scan Details 
+          **************************************************-->
+          <div nz-row>
+            <div nz-col [nzSpan]="10" style="padding:0.3em">
+              <span class="form-title-cls">Scan Details</span>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Scan Mode</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="scanMode" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of scanModeOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>kV</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="kV" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of kVOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>mA</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="mA" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of mAOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>Range</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="range" [nzSize]="'large'" nzPlaceHolder="请输入range" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('range').dirty&&getFormControl('range').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('range').dirty&&getFormControl('range').hasError('pattern')">请输入整数！</div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Collimation</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="collimation" [nzSize]="'large'" [nzDisabled]="otherState" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of collimationOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Pitch</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="pitch" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of pitchOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Rotation Time</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="rotationTime" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of rotationTimeOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>CE</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="ce" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of ceOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Direction</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="direction" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of directionOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+
+          <!-- *********************************************
+                         Recon. Details 
+          **************************************************-->
+          <div nz-row>
+            <div nz-col [nzSpan]="10" style="padding:0.3em">
+              <span class="form-title-cls">Recon. Details</span>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Slice Thickness(mm)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="sliceThickness" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of sliceThicknessOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Slice Interval(mm)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="sliceInterval" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of sliceIntervalOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Urgent Recon</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="urgentRecon" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of urgentReconOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>Vari-Area</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="variArea" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of variAreaReconOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label>D-FOV</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3">
+              <nz-select formControlName="dFOV" [nzSize]="'large'" [nzDisabled]="otherState">
+                <nz-option *ngFor="let option of dFOVOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>Center X,Y</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="centerxy" [nzSize]="'large'" nzPlaceHolder="请输入(x,y),eg: 256,256" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('centerxy').dirty&&getFormControl('centerxy').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('centerxy').dirty&&getFormControl('centerxy').hasError('pattern')">格式错误！格式说明： x,y</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>Start Position(mm)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="startPosition" [nzSize]="'large'" nzPlaceHolder="请输入 start position" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('startPosition').dirty&&getFormControl('startPosition').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('startPosition').dirty&&getFormControl('startPosition').hasError('pattern')">请输入数字！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>End Position(mm)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="endPosition" [nzSize]="'large'" nzPlaceHolder="请输入 end position" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('endPosition').dirty&&getFormControl('endPosition').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('endPosition').dirty&&getFormControl('endPosition').hasError('pattern')">请输入数字！</div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>No Of Images</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="noOfImages" [nzSize]="'large'" nzPlaceHolder="请输入 number of images" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('noOfImages').dirty&&getFormControl('noOfImages').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('noOfImages').dirty&&getFormControl('noOfImages').hasError('pattern')">只能输入整数！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>Total Images</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="totalImages" [nzSize]="'large'" nzPlaceHolder="请输入 total images" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('totalImages').dirty&&getFormControl('totalImages').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('totalImages').dirty&&getFormControl('totalImages').hasError('pattern')">只能输入整数！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>WW1</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="ww1" [nzSize]="'large'" nzPlaceHolder="请输入 WW1" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('ww1').dirty&&getFormControl('ww1').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('ww1').dirty&&getFormControl('ww1').hasError('pattern')">只能输入整数！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>WL1</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="wl1" [nzSize]="'large'" nzPlaceHolder="请输入 WL1" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('wl1').dirty&&getFormControl('wl1').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('wl1').dirty&&getFormControl('wl1').hasError('pattern')">只能输入整数！</div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>WW2</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="ww2" [nzSize]="'large'" nzPlaceHolder="请输入 WW2" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('ww2').dirty&&getFormControl('ww2').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('ww2').dirty&&getFormControl('ww2').hasError('pattern')">只能输入整数！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>WL2</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="wl2" [nzSize]="'large'" nzPlaceHolder="请输入 WL2" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('wl2').dirty&&getFormControl('wl2').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('wl2').dirty&&getFormControl('wl2').hasError('pattern')">只能输入整数！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>WW3</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="ww3" [nzSize]="'large'" nzPlaceHolder="请输入 WW3" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('ww3').dirty&&getFormControl('ww3').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('ww3').dirty&&getFormControl('ww3').hasError('pattern')">只能输入整数！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>WL3</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="wl3" [nzSize]="'large'" nzPlaceHolder="请输入 WL3" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('wl3').dirty&&getFormControl('wl3').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('wl3').dirty&&getFormControl('wl3').hasError('pattern')">只能输入整数！</div>
+            </div>
+          </div>
+          <!-- *********************************************
+                         Dose 
+          **************************************************-->
+          <div nz-row>
+            <div nz-col [nzSpan]="10" style="padding:0.3em">
+              <span class="form-title-cls">Dose</span>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="3">
+              <label nz-form-item-required>CTDI vol(mGy)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="ctdi" [nzSize]="'large'" nzPlaceHolder="请输入 CTDI vol" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('ctdi').dirty&&getFormControl('ctdi').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('ctdi').dirty&&getFormControl('ctdi').hasError('pattern')">只能输入数字！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3" nzHasFeedback>
+              <label nz-form-item-required>Notification CTDIvol(mGy)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="notificationCTDI" [nzSize]="'large'" nzPlaceHolder="Please input notification CTDI vol" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('notificationCTDI').dirty&&getFormControl('notificationCTDI').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('notificationCTDI').dirty&&getFormControl('notificationCTDI').hasError('pattern')">只能输入数字！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3" nzHasFeedback>
+              <label nz-form-item-required>DLP(mGy*cm)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="dlp" [nzSize]="'large'" nzPlaceHolder="请输入 DLP" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('dlp').dirty&&getFormControl('dlp').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('dlp').dirty&&getFormControl('dlp').hasError('pattern')">只能输入数字！</div>
+            </div>
+            <div nz-form-label nz-col [nzSpan]="3" nzHasFeedback>
+              <label nz-form-item-required>NotificationDLP(mGy*cm)</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="3" nzHasFeedback>
+              <nz-input formControlName="notificationDLP" [nzSize]="'large'" nzPlaceHolder="请输入 notification DLP" [nzDisabled]="otherState"></nz-input>
+              <div nz-form-explain *ngIf="getFormControl('notificationDLP').dirty&&getFormControl('notificationDLP').hasError('required')">不能为空！</div>
+              <div nz-form-explain *ngIf="getFormControl('notificationDLP').dirty&&getFormControl('notificationDLP').hasError('pattern')">只能输入数字！</div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-col [nzSpan]="6">
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="syncButtonClick($event)" [disabled]="disabledButton1||connectState">{{buttonLabel1}}</button>
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="getProtocols($event)" [disabled]="disabledButton2||connectState">{{buttonLabel2}}</button>
+            </div>
+            <div nz-col [nzPush]="15" [nzSpan]="4" nz-form-control>
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="resetForm($event)" [disabled]="connectState">新建</button>
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'" type="submit" (click)="submitForm($event,validateForm.value)" [disabled]="connectState">发送</button>
+            </div>
+          </div>
+        </form>
+        <div nz-row *ngIf="hiddenActionState">
+          <span>{{buttonAction}}: {{protocolIndex}}/{{protocolLen}}</span>
+        </div>
+      </ng-template>
+    </nz-card>
+  </div>
+</div>

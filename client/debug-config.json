@@ -1,0 +1,6 @@
+{
+    "/CTSimulatorTestTool/":{
+        "target": "http://localhost:9817",
+        "secure": false
+    }
+}
